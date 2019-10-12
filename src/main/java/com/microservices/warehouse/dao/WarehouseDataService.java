@@ -31,5 +31,38 @@ public class WarehouseDataService implements ItemDao {
                 .findFirst();
     }
 
+    @Override
+    public Item updateItemAmount(UUID id, String amountType, int amountDiff) {
+        return getItemById(id)
+                .map(item -> {
+                    int itemIdx = DB.indexOf(item);
+                    if (itemIdx >= 0) {
+                        Item itemToUpdate = DB.get(itemIdx);
+                        if (amountType.equals("actual")) {
+                            Item updatedItem = new Item(
+                                    id,
+                                    itemToUpdate.getName(),
+                                    itemToUpdate.getPrice(),
+                                    itemToUpdate.getActualAmount() + amountDiff,
+                                    itemToUpdate.getAvailableAmount()
+                            );
+                            DB.set(itemIdx, updatedItem);
+                            return updatedItem;
+                        } else if (amountType.equals("available")) {
+                            Item updatedItem = new Item(
+                                    id,
+                                    itemToUpdate.getName(),
+                                    itemToUpdate.getPrice(),
+                                    itemToUpdate.getActualAmount(),
+                                    itemToUpdate.getAvailableAmount() + amountDiff
+                            );
+                            DB.set(itemIdx, updatedItem);
+                            return updatedItem;
+                        }
+                    }
+                    return null;
+                })
+                .orElse(null);
+    }
 
 }

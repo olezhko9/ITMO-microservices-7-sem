@@ -31,4 +31,8 @@ public class WarehouseService {
     public Optional<Item> getItemById(UUID id) {
         return itemDao.getItemById(id);
     }
+
+    public Item updateItemAmount(UUID id, String amountType, int amount) {
+        return itemDao.updateItemAmount(id, amountType, amount);
+    }
 }

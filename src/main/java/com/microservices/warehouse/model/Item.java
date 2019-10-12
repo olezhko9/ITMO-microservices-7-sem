@@ -8,7 +8,8 @@ public class Item {
     private final UUID id;
     private final String name;
     private final float price;
-    private final int actualAmount;
+    private int actualAmount;
+    private int availableAmount;
 
     public UUID getId() {
         return id;
@@ -29,8 +30,6 @@ public class Item {
     public int getAvailableAmount() {
         return availableAmount;
     }
-
-    private final int availableAmount;
 
     public Item(@JsonProperty("id") UUID id,
                 @JsonProperty("name") String name,

@@ -1,5 +1,6 @@
 package com.microservices.warehouse.api;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.microservices.warehouse.model.Item;
 import com.microservices.warehouse.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,12 @@ public class WarehouseController {
     public Item getItemById(@PathVariable("id") UUID id) {
         return warehouseService.getItemById(id)
                 .orElse(null);
+    }
+
+    @PutMapping(path = "/items/{id}/amount")
+    public Item updateItemAmount(@PathVariable("id") UUID id, @RequestBody ObjectNode json) {
+        String amountType = json.get("amountType").asText();
+        int amount = json.get("amount").asInt();
+        return warehouseService.updateItemAmount(id, amountType, amount);
     }
 }

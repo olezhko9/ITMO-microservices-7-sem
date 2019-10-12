@@ -18,4 +18,6 @@ public interface ItemDao {
     List<Item> getAllItems();
 
     Optional<Item> getItemById(UUID id);
+
+    Item updateItemAmount(UUID id, String amountType, int amount);
 }
