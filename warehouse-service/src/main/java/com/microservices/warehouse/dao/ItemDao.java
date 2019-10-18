@@ -1,23 +1,23 @@
 package com.microservices.warehouse.dao;
 
-import com.microservices.warehouse.model.Item;
+import com.microservices.warehouse.dto.ItemCreationDto;
+import com.microservices.warehouse.dto.ItemDto;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface ItemDao {
 
-    int addItem(UUID id, Item item);
+    ItemDto addItem(UUID id, ItemCreationDto item);
 
-    default int addItem(Item item) {
+    default ItemDto addItem(ItemCreationDto item) {
         UUID id = UUID.randomUUID();
         return addItem(id, item);
     }
 
-    List<Item> getAllItems();
+    List<ItemDto> getAllItems();
 
-    Optional<Item> getItemById(UUID id);
+    ItemDto getItemById(UUID id);
 
-    Item updateItemAmount(UUID id, String amountType, int amount);
+    ItemDto updateItemAmount(UUID id, String amountType, int amount);
 }
