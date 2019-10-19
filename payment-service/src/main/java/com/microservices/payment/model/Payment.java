@@ -15,6 +15,8 @@ public class Payment {
         this.userInfo = userInfo;
     }
 
+    public Payment() {}
+
     public int getOrderId() {
         return orderId;
     }
