@@ -2,10 +2,10 @@ package com.microservices.warehouse.dto;
 
 import com.microservices.warehouse.model.Item;
 
-import java.util.UUID;
+
 
 public class ItemDto {
-    private UUID id;
+    private int id;
     private String name;
     private float price;
     private int actualAmount;
@@ -21,11 +21,11 @@ public class ItemDto {
         return itemDto;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(int id) {
         this.id = id;
     }
 

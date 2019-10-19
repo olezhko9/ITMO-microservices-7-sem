@@ -9,7 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository("sqlDao")
@@ -22,34 +21,38 @@ public class WarehouseDataService implements ItemDao {
     public WarehouseDataService() {
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING);
-
-            PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO items ('name', 'price', 'actualAmount', 'availableAmount')" +
-                            "VALUES ('Xiaomi Redmo Note 7', '13990.0', 56, 56)"
-            );
-            statement.executeUpdate();
-            ResultSet itemID = statement.getGeneratedKeys();
-            if (itemID.next()) {
-                System.out.format("Пользователь добавлен. id: %d%n",
-                        itemID.getInt(1));
-            }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                assert connection != null;
-                connection.close();
-            } catch (SQLException ignored) {}
         }
     }
 
-
     @Override
-    public ItemDto addItem(UUID id, ItemCreationDto itemCreationDto) {
+    public ItemDto addItem(ItemCreationDto itemCreationDto) {
         Item createdItem = itemCreationDto.toItem();
-        createdItem.setId(id);
-        DB.add(createdItem);
-        return ItemDto.fromItem(createdItem);
+
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(
+                    "INSERT INTO items ('name', 'price', 'actualAmount', 'availableAmount')" +
+                            "VALUES (?, ?, ?, ?)"
+            );
+
+            statement.setString(1, itemCreationDto.getName());
+            statement.setFloat(2, itemCreationDto.getPrice());
+            statement.setInt(3, itemCreationDto.getAmount());
+            statement.setInt(4, itemCreationDto.getAmount());
+            statement.executeUpdate();
+
+            ResultSet itemID = statement.getGeneratedKeys();
+            if (itemID.next()) {
+                createdItem.setId(itemID.getInt(1));
+                return ItemDto.fromItem(createdItem);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override
@@ -60,17 +63,17 @@ public class WarehouseDataService implements ItemDao {
     }
 
     @Override
-    public ItemDto getItemById(UUID id) {
+    public ItemDto getItemById(int id) {
         Optional<Item> item = DB.stream()
-                .filter(_item -> _item.getId().equals(id))
+                .filter(_item -> _item.getId() == id)
                 .findFirst();
         return item.map(ItemDto::fromItem).orElse(null);
     }
 
     @Override
-    public ItemDto updateItemAmount(UUID id, String amountType, int amountDiff) {
+    public ItemDto updateItemAmount(int id, String amountType, int amountDiff) {
         Optional<Item> item = DB.stream()
-                .filter(_item -> _item.getId().equals(id))
+                .filter(_item -> _item.getId() == id)
                 .findFirst();
 
         if (item.isPresent()) {

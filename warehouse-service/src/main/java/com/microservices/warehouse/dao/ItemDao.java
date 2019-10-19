@@ -4,20 +4,14 @@ import com.microservices.warehouse.dto.ItemCreationDto;
 import com.microservices.warehouse.dto.ItemDto;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface ItemDao {
 
-    ItemDto addItem(UUID id, ItemCreationDto item);
-
-    default ItemDto addItem(ItemCreationDto item) {
-        UUID id = UUID.randomUUID();
-        return addItem(id, item);
-    }
+    ItemDto addItem(ItemCreationDto item);
 
     List<ItemDto> getAllItems();
 
-    ItemDto getItemById(UUID id);
+    ItemDto getItemById(int id);
 
-    ItemDto updateItemAmount(UUID id, String amountType, int amount);
+    ItemDto updateItemAmount(int id, String amountType, int amount);
 }

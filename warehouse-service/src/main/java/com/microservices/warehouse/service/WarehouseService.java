@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class WarehouseService {
@@ -28,11 +27,11 @@ public class WarehouseService {
         return itemDao.getAllItems();
     }
 
-    public ItemDto getItemById(UUID id) {
+    public ItemDto getItemById(int id) {
         return itemDao.getItemById(id);
     }
 
-    public ItemDto updateItemAmount(UUID id, String amountType, int amount) {
+    public ItemDto updateItemAmount(int id, String amountType, int amount) {
         return itemDao.updateItemAmount(id, amountType, amount);
     }
 }

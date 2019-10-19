@@ -2,10 +2,8 @@ package com.microservices.warehouse.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.UUID;
-
 public class Item {
-    private UUID id;
+    private int id;
     private String name;
     private float price;
     private int actualAmount;
@@ -13,7 +11,7 @@ public class Item {
 
     public Item() {}
 
-    public Item(@JsonProperty("id") UUID id,
+    public Item(@JsonProperty("id") int id,
                 @JsonProperty("name") String name,
                 @JsonProperty("price") float price,
                 @JsonProperty("actualAmount") int actualAmount,
@@ -25,11 +23,11 @@ public class Item {
         this.availableAmount = availableAmount;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+
 
 @RequestMapping("warehouse")
 @RestController
@@ -33,7 +33,7 @@ public class WarehouseController {
     }
 
     @GetMapping(path = "/items/{id}")
-    public ResponseEntity<ItemDto> getItemById(@PathVariable("id") UUID id) {
+    public ResponseEntity<ItemDto> getItemById(@PathVariable("id") int id) {
         ItemDto itemDto = warehouseService.getItemById(id);
         if (itemDto == null) {
             return ResponseEntity.notFound().build();
@@ -42,7 +42,7 @@ public class WarehouseController {
     }
 
     @PutMapping(path = "/items/{id}/amount")
-    public ResponseEntity<ItemDto> updateItemAmount(@PathVariable("id") UUID id, @RequestBody ObjectNode json) {
+    public ResponseEntity<ItemDto> updateItemAmount(@PathVariable("id") int id, @RequestBody ObjectNode json) {
         String amountType = json.get("amountType").asText();
         int amount = json.get("amount").asInt();
         ItemDto itemDto = warehouseService.updateItemAmount(id, amountType, amount);
