@@ -8,13 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-@Repository("sqlDao")
+
+@Repository("sqlite")
 public class WarehouseDataService implements ItemDao {
 
-    private static List<Item> DB = new ArrayList<>();
     private static final String CONNECTION_STRING = "jdbc:sqlite:warehouse.db";
     private Connection connection;
 
@@ -43,9 +41,10 @@ public class WarehouseDataService implements ItemDao {
             statement.setInt(4, itemCreationDto.getAmount());
             statement.executeUpdate();
 
-            ResultSet itemID = statement.getGeneratedKeys();
-            if (itemID.next()) {
-                createdItem.setId(itemID.getInt(1));
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                createdItem.setId(resultSet.getInt(1));
+                resultSet.close();
                 return ItemDto.fromItem(createdItem);
             }
         } catch (SQLException e) {
@@ -57,40 +56,98 @@ public class WarehouseDataService implements ItemDao {
 
     @Override
     public List<ItemDto> getAllItems() {
-        return DB.stream()
-                .map(ItemDto::fromItem)
-                .collect(Collectors.toList());
+        ResultSet resultSet = null;
+        List<ItemDto> items = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM items"
+            );
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                items.add(ItemDto.fromItem(new Item(
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getFloat("price"),
+                        resultSet.getInt("actualAmount"),
+                        resultSet.getInt("availableAmount")
+                )));
+            }
+            resultSet.close();
+            return items;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override
     public ItemDto getItemById(int id) {
-        Optional<Item> item = DB.stream()
-                .filter(_item -> _item.getId() == id)
-                .findFirst();
-        return item.map(ItemDto::fromItem).orElse(null);
+        ResultSet resultSet = null;
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM items WHERE id = ?"
+            );
+            statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                ItemDto itemDto;
+                itemDto = ItemDto.fromItem(new Item(
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getFloat("price"),
+                        resultSet.getInt("actualAmount"),
+                        resultSet.getInt("availableAmount")
+                ));
+                resultSet.close();
+                return itemDto;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override
     public ItemDto updateItemAmount(int id, String amountType, int amountDiff) {
-        Optional<Item> item = DB.stream()
-                .filter(_item -> _item.getId() == id)
-                .findFirst();
-
-        if (item.isPresent()) {
-            int itemIdx = DB.indexOf(item.get());
-            Item itemToUpdate = item.get();
-            System.out.println(itemIdx);
-
-            if (amountType.equals("actual")) {
-                itemToUpdate.setActualAmount(itemToUpdate.getActualAmount() + amountDiff);
-            }
-            else if (amountType.equals("available")) {
-                itemToUpdate.setAvailableAmount(itemToUpdate.getAvailableAmount() + amountDiff);
-            }
-            DB.set(itemIdx, itemToUpdate);
-            return ItemDto.fromItem(itemToUpdate);
-        } else {
+        ItemDto itemDto = getItemById(id);
+        if (itemDto == null) {
             return null;
         }
+
+        PreparedStatement statement = null;
+        try {
+            if (amountType.equals("actual")) {
+                itemDto.setActualAmount(itemDto.getActualAmount() + amountDiff);
+                statement = connection.prepareStatement(
+                        "UPDATE items SET actualAmount = ? WHERE id = ?"
+                );
+                statement.setInt(1, itemDto.getActualAmount());
+                statement.setInt(2, itemDto.getId());
+            } else if (amountType.equals("available")) {
+                itemDto.setAvailableAmount(itemDto.getAvailableAmount() + amountDiff);
+                statement = connection.prepareStatement(
+                        "UPDATE items SET availableAmount = ? WHERE id = ?"
+                );
+                statement.setInt(1, itemDto.getAvailableAmount());
+                statement.setInt(2, itemDto.getId());
+            } else {
+                return null;
+            }
+
+            int resultSet = statement.executeUpdate();
+            if (resultSet != 0) {
+                return itemDto;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

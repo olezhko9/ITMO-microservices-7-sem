@@ -15,7 +15,7 @@ public class WarehouseService {
     private final ItemDao itemDao;
 
     @Autowired
-    public WarehouseService(@Qualifier("sqlDao") ItemDao itemDao) {
+    public WarehouseService(@Qualifier("sqlite") ItemDao itemDao) {
         this.itemDao = itemDao;
     }
 
