@@ -1,7 +1,7 @@
 package com.microservices.payment.dao;
 
-import com.microservices.payment.dto.PaymentCreationDto;
 import com.microservices.payment.dto.PaymentDto;
+import com.microservices.payment.dto.UserDetailsDto;
 import com.microservices.payment.model.Payment;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +22,13 @@ public class PaymentDataService implements PaymentDao {
     }
 
     @Override
-    public PaymentDto initPayment(int orderId, PaymentCreationDto paymentCreationDto) {
-        Payment payment = paymentCreationDto.toPayment();
+    public PaymentDto initPayment(int orderId, UserDetailsDto userDetails) {
+
+        Payment payment = new Payment(
+                orderId,
+                userDetails.getCardAuthorizationInfo(),
+                userDetails.getName()
+        );
 
         PreparedStatement statement = null;
         try {
@@ -31,10 +36,9 @@ public class PaymentDataService implements PaymentDao {
                     "INSERT INTO Payments VALUES(?, ?, ?);"
             );
 
-            statement.setInt(1, orderId);
-            statement.setString(2, paymentCreationDto.getUserDetails().cardAuthorizationInfo);
-            statement.setString(3, paymentCreationDto.getUserDetails().name);
-
+            statement.setInt(1, payment.getOrderId());
+            statement.setString(2, payment.getStatus());
+            statement.setString(3, payment.getUserName());
 
             int resultSet = statement.executeUpdate();
             if (resultSet != 0) {

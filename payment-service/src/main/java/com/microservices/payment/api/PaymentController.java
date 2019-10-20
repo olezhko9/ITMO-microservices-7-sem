@@ -1,7 +1,7 @@
 package com.microservices.payment.api;
 
-import com.microservices.payment.dto.PaymentCreationDto;
 import com.microservices.payment.dto.PaymentDto;
+import com.microservices.payment.dto.UserDetailsDto;
 import com.microservices.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +19,8 @@ public class PaymentController {
     }
 
     @PostMapping(path = "/{orderId}")
-    public ResponseEntity<PaymentDto> initPayment(@PathVariable("orderId") int orderId, @RequestBody PaymentCreationDto payment) {
-        return ResponseEntity.ok(paymentService.initPayment(orderId, payment));
+    public ResponseEntity<PaymentDto> initPayment(@PathVariable("orderId") int orderId, @RequestBody UserDetailsDto userDetailsDto) {
+        return ResponseEntity.ok(paymentService.initPayment(orderId, userDetailsDto));
     }
 
     @GetMapping(path = "/{orderId}")
