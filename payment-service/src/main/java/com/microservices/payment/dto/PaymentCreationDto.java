@@ -1,11 +1,11 @@
 package com.microservices.payment.dto;
 
 import com.microservices.payment.model.Payment;
-import com.microservices.payment.model.UserInfo;
+import com.microservices.payment.model.UserDetails;
 
 public class PaymentCreationDto {
     private int orderId;
-    UserInfo userInfo;
+    private UserDetails userDetails;
 
     public int getOrderId() {
         return orderId;
@@ -15,18 +15,19 @@ public class PaymentCreationDto {
         this.orderId = orderId;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
+    public UserDetails getUserDetails() {
+        return userDetails;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    public void setUserDetails(UserDetails userDetails) {
+        this.userDetails = userDetails;
     }
 
     public Payment toPayment() {
         Payment payment = new Payment();
         payment.setOrderId(this.getOrderId());
-        payment.setUserInfo(this.getUserInfo());
+        payment.setStatus(this.getUserDetails().cardAuthorizationInfo);
+        payment.setUserName(this.getUserDetails().name);
         return payment;
     }
 }

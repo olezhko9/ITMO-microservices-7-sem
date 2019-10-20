@@ -32,7 +32,7 @@ public class PaymentDataService implements PaymentDao {
             );
 
             statement.setInt(1, paymentCreationDto.getOrderId());
-            statement.setString(2, paymentCreationDto.getUserInfo().name);
+            statement.setString(2, paymentCreationDto.getUserDetails().name);
             statement.executeUpdate();
 
             ResultSet resultSet = statement.getGeneratedKeys();

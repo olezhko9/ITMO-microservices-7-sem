@@ -4,7 +4,7 @@ import com.microservices.payment.model.Payment;
 
 public class PaymentDto {
     private int orderId;
-    private boolean status;
+    private String status;
 
     public int getOrderId() {
         return orderId;
@@ -14,18 +14,18 @@ public class PaymentDto {
         this.orderId = orderId;
     }
 
-    public boolean status() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
     public static PaymentDto fromPayment(Payment payment) {
         PaymentDto paymentDto = new PaymentDto();
         paymentDto.setOrderId(payment.getOrderId());
-        paymentDto.setStatus(payment.getUserInfo().cardInfo);
+        paymentDto.setStatus(payment.getStatus());
         return paymentDto;
     }
 }

@@ -2,13 +2,13 @@ package com.microservices.payment.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UserInfo {
+public class UserDetails {
     public String name;
-    public boolean cardAuthorizationInfo;
+    public String cardAuthorizationInfo;
 
-    public UserInfo(
+    public UserDetails(
             @JsonProperty("username") String name,
-            @JsonProperty("cardInfo") boolean cardAuthorizationInfo) {
+            @JsonProperty("cardAuthorizationInfo") String cardAuthorizationInfo) {
         this.name = name;
         this.cardAuthorizationInfo = cardAuthorizationInfo;
     }

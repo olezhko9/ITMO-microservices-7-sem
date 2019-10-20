@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Payment {
     private int orderId;
-    private boolean status;
-    private UserInfo userInfo;
+    private String status;
+    private String userName;
 
     public Payment(
             @JsonProperty("orderId") int orderId,
-            @JsonProperty("status") int status,
-            UserInfo userInfo) {
+            @JsonProperty("status") String status,
+            String userName) {
         this.orderId = orderId;
         this.status = status;
-        this.userInfo = userInfo;
+        this.userName = userName;
     }
 
     public Payment() {}
@@ -26,19 +26,19 @@ public class Payment {
         this.orderId = orderId;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
