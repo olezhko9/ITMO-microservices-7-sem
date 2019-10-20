@@ -19,7 +19,7 @@ public class PaymentController {
     }
 
     @PostMapping(path = "/payments/{orderId}")
-    public ResponseEntity<PaymentDto> initPayment(@RequestBody PaymentCreationDto payment) {
+    public ResponseEntity<PaymentDto> initPayment(@PathVariable("orderId") int orderId, @RequestBody PaymentCreationDto payment) {
         return ResponseEntity.ok(paymentService.initPayment(payment));
     }
 

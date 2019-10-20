@@ -5,7 +5,7 @@ import com.microservices.payment.dto.PaymentDto;
 
 
 public interface PaymentDao {
-    PaymentDto initPayment(PaymentCreationDto item);
+    PaymentDto initPayment(int orderId, PaymentCreationDto item);
 
     PaymentDto getPaymentStatus(int orderId);
 }

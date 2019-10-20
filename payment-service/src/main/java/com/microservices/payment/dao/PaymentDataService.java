@@ -10,7 +10,7 @@ import java.sql.*;
 @Repository("sqlite")
 public class PaymentDataService implements PaymentDao {
 
-    private static final String CONNECTION_STRING = "jdbc:sqlite:warehouse.db";
+    private static final String CONNECTION_STRING = "jdbc:sqlite:Payments.db";
     private Connection connection;
 
     public PaymentDataService() {
@@ -22,23 +22,22 @@ public class PaymentDataService implements PaymentDao {
     }
 
     @Override
-    public PaymentDto initPayment(PaymentCreationDto paymentCreationDto) {
+    public PaymentDto initPayment(int orderId, PaymentCreationDto paymentCreationDto) {
         Payment payment = paymentCreationDto.toPayment();
 
         PreparedStatement statement = null;
         try {
             statement = connection.prepareStatement(
-                    "INSERT INTO Payments VALUES(NULL, ?, 0, ?');"
+                    "INSERT INTO Payments VALUES(?, ?, ?);"
             );
 
-            statement.setInt(1, paymentCreationDto.getOrderId());
-            statement.setString(2, paymentCreationDto.getUserDetails().name);
-            statement.executeUpdate();
+            statement.setInt(1, orderId);
+            statement.setString(2, paymentCreationDto.getUserDetails().cardAuthorizationInfo);
+            statement.setString(3, paymentCreationDto.getUserDetails().name);
 
-            ResultSet resultSet = statement.getGeneratedKeys();
-            if (resultSet.next()) {
-//                payment.setOrderId(resultSet.getInt(1));
-                resultSet.close();
+
+            int resultSet = statement.executeUpdate();
+            if (resultSet != 0) {
                 return PaymentDto.fromPayment(payment);
             }
         } catch (SQLException e) {
@@ -61,8 +60,8 @@ public class PaymentDataService implements PaymentDao {
 
             if (resultSet.next()) {
                 PaymentDto paymentDto = new PaymentDto();
-                paymentDto.setOrderId(resultSet.getInt("OrderID"));
-                paymentDto.setStatus(resultSet.getInt("Status"));
+                paymentDto.setOrderId(resultSet.getInt("orderId"));
+                paymentDto.setStatus(resultSet.getString("status"));
                 resultSet.close();
                 return paymentDto;
             }
