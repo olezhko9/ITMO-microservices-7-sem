@@ -5,7 +5,6 @@ import com.microservices.payment.model.Payment;
 public class PaymentDto {
     private int orderId;
     private boolean status;
-    private String userName;
 
     public int getOrderId() {
         return orderId;
@@ -15,7 +14,7 @@ public class PaymentDto {
         this.orderId = orderId;
     }
 
-    public boolean isStatus() {
+    public boolean status() {
         return status;
     }
 

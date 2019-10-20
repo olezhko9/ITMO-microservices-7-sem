@@ -9,7 +9,8 @@ public class Payment {
 
     public Payment(
             @JsonProperty("orderId") int orderId,
-            @JsonProperty("status") boolean status, UserInfo userInfo) {
+            @JsonProperty("status") int status,
+            UserInfo userInfo) {
         this.orderId = orderId;
         this.status = status;
         this.userInfo = userInfo;
@@ -25,11 +26,11 @@ public class Payment {
         this.orderId = orderId;
     }
 
-    public boolean isStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
