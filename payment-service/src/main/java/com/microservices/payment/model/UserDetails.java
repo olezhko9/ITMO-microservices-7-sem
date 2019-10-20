@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserInfo {
     public String name;
-    public boolean cardInfo;
+    public boolean cardAuthorizationInfo;
 
     public UserInfo(
             @JsonProperty("username") String name,
-            @JsonProperty("cardInfo") boolean cardInfo) {
+            @JsonProperty("cardInfo") boolean cardAuthorizationInfo) {
         this.name = name;
-        this.cardInfo = cardInfo;
+        this.cardAuthorizationInfo = cardAuthorizationInfo;
     }
 }
