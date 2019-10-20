@@ -18,8 +18,8 @@ public class PaymentService {
         this.paymentDao = paymentDao;
     }
 
-    public PaymentDto initPayment(PaymentCreationDto payment) {
-        return paymentDao.initPayment(payment);
+    public PaymentDto initPayment(int orderId, PaymentCreationDto payment) {
+        return paymentDao.initPayment(orderId, payment);
     }
 
     public PaymentDto getPaymentStatus(int orderId) {

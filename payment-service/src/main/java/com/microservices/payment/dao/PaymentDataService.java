@@ -53,7 +53,7 @@ public class PaymentDataService implements PaymentDao {
 
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "Select * FROM Payments WHERE OrderID=?;"
+                    "Select * FROM Payments WHERE orderId=?;"
             );
             statement.setInt(1, orderId);
             resultSet = statement.executeQuery();

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@RequestMapping("payment")
+@RequestMapping("payments")
 @RestController
 public class PaymentController {
     private final PaymentService paymentService;
@@ -18,12 +18,12 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
-    @PostMapping(path = "/payments/{orderId}")
+    @PostMapping(path = "/{orderId}")
     public ResponseEntity<PaymentDto> initPayment(@PathVariable("orderId") int orderId, @RequestBody PaymentCreationDto payment) {
-        return ResponseEntity.ok(paymentService.initPayment(payment));
+        return ResponseEntity.ok(paymentService.initPayment(orderId, payment));
     }
 
-    @GetMapping(path = "/payment/{orderId}")
+    @GetMapping(path = "/{orderId}")
     public ResponseEntity<PaymentDto> getPaymentStatus(@PathVariable("orderId") int id) {
         PaymentDto paymentDto = paymentService.getPaymentStatus(id);
         if (paymentDto == null) {

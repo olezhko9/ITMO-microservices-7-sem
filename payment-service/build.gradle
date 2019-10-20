@@ -17,6 +17,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    compile group:'org.xerial', name:'sqlite-jdbc', version:'3.8.11.2'
 }
 
 test {
