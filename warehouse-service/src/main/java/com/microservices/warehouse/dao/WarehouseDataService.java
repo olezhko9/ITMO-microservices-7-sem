@@ -1,5 +1,6 @@
 package com.microservices.warehouse.dao;
 
+import com.microservices.warehouse.dto.ItemAmountDto;
 import com.microservices.warehouse.dto.ItemCreationDto;
 import com.microservices.warehouse.dto.ItemDto;
 import com.microservices.warehouse.model.Item;
@@ -113,7 +114,7 @@ public class WarehouseDataService implements ItemDao {
     }
 
     @Override
-    public ItemDto updateItemAmount(int id, String amountType, int amountDiff) {
+    public ItemDto updateItemAmount(int id, ItemAmountDto itemAmountDto) {
         ItemDto itemDto = getItemById(id);
         if (itemDto == null) {
             return null;
@@ -121,15 +122,15 @@ public class WarehouseDataService implements ItemDao {
 
         PreparedStatement statement = null;
         try {
-            if (amountType.equals("actual")) {
-                itemDto.setActualAmount(itemDto.getActualAmount() + amountDiff);
+            if (itemAmountDto.getAmountType().equals("actual")) {
+                itemDto.setActualAmount(itemDto.getActualAmount() + itemAmountDto.getAmount());
                 statement = connection.prepareStatement(
                         "UPDATE items SET actualAmount = ? WHERE id = ?"
                 );
                 statement.setInt(1, itemDto.getActualAmount());
                 statement.setInt(2, itemDto.getId());
-            } else if (amountType.equals("available")) {
-                itemDto.setAvailableAmount(itemDto.getAvailableAmount() + amountDiff);
+            } else if (itemAmountDto.getAmountType().equals("available")) {
+                itemDto.setAvailableAmount(itemDto.getAvailableAmount() + itemAmountDto.getAmount());
                 statement = connection.prepareStatement(
                         "UPDATE items SET availableAmount = ? WHERE id = ?"
                 );

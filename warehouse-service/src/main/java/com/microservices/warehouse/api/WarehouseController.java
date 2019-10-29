@@ -1,6 +1,7 @@
 package com.microservices.warehouse.api;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.microservices.warehouse.dto.ItemAmountDto;
 import com.microservices.warehouse.dto.ItemCreationDto;
 import com.microservices.warehouse.dto.ItemDto;
 import com.microservices.warehouse.service.WarehouseService;
@@ -42,10 +43,8 @@ public class WarehouseController {
     }
 
     @PutMapping(path = "/items/{id}/amount")
-    public ResponseEntity<ItemDto> updateItemAmount(@PathVariable("id") int id, @RequestBody ObjectNode json) {
-        String amountType = json.get("amountType").asText();
-        int amount = json.get("amount").asInt();
-        ItemDto itemDto = warehouseService.updateItemAmount(id, amountType, amount);
+    public ResponseEntity<ItemDto> updateItemAmount(@PathVariable("id") int id, @RequestBody ItemAmountDto itemAmountDto) {
+        ItemDto itemDto = warehouseService.updateItemAmount(id, itemAmountDto);
         if (itemDto == null) {
             return ResponseEntity.notFound().build();
         }

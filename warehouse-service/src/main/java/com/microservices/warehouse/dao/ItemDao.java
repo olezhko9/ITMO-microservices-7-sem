@@ -1,5 +1,6 @@
 package com.microservices.warehouse.dao;
 
+import com.microservices.warehouse.dto.ItemAmountDto;
 import com.microservices.warehouse.dto.ItemCreationDto;
 import com.microservices.warehouse.dto.ItemDto;
 
@@ -13,5 +14,5 @@ public interface ItemDao {
 
     ItemDto getItemById(int id);
 
-    ItemDto updateItemAmount(int id, String amountType, int amount);
+    ItemDto updateItemAmount(int id, ItemAmountDto itemAmountDto);
 }

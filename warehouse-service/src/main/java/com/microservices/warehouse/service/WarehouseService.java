@@ -1,6 +1,7 @@
 package com.microservices.warehouse.service;
 
 import com.microservices.warehouse.dao.ItemDao;
+import com.microservices.warehouse.dto.ItemAmountDto;
 import com.microservices.warehouse.dto.ItemCreationDto;
 import com.microservices.warehouse.dto.ItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class WarehouseService {
         return itemDao.getItemById(id);
     }
 
-    public ItemDto updateItemAmount(int id, String amountType, int amount) {
-        return itemDao.updateItemAmount(id, amountType, amount);
+    public ItemDto updateItemAmount(int id, ItemAmountDto itemAmountDto) {
+        return itemDao.updateItemAmount(id, itemAmountDto);
     }
 }
