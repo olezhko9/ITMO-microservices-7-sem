@@ -6,16 +6,28 @@ import com.microservices.ordersservice.model.OrderItemDto;
 import com.microservices.ordersservice.model.exceptions.DataIntegrityViolationException;
 import com.microservices.ordersservice.model.Order;
 import com.microservices.ordersservice.model.exceptions.ItemNotFoundException;
+import com.microservices.ordersservice.service.rabbitmq.RabbitMQPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class OrderService {
 
     private final OrderDao orderDao;
+
+    @Autowired
+    private RabbitMQPublisher rabbitMQPublisher;
+
+    private static List<String> ROUTING_KEYS = Arrays.asList(
+            "order.paid",
+            "order.cancelled",
+            "order.completed"
+    );
 
     @Autowired
     public OrderService(@Qualifier("sqlite") OrderDao orderDao) {
@@ -36,7 +48,9 @@ public class OrderService {
     }
 
     public ArrayList<OrderDto> getOrders() {
-        return orderDao.getOrders();
+        final ArrayList<OrderDto> orders = orderDao.getOrders();
+        rabbitMQPublisher.publish("orders.all", orders);
+        return orders;
     }
 
     public OrderDto setOrderStatus(int id, String status) throws ItemNotFoundException, DataIntegrityViolationException {
