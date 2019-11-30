@@ -4,8 +4,13 @@ import com.microservices.warehouse.dao.ItemDao;
 import com.microservices.warehouse.dto.ItemAmountDto;
 import com.microservices.warehouse.dto.ItemCreationDto;
 import com.microservices.warehouse.dto.ItemDto;
+import com.microservices.warehouse.dto.OrderDto;
+import com.microservices.warehouse.model.OrderStatus;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,5 +39,29 @@ public class WarehouseService {
 
     public ItemDto updateItemAmount(int id, ItemAmountDto itemAmountDto) {
         return itemDao.updateItemAmount(id, itemAmountDto);
+    }
+
+    @Bean
+    public Jackson2JsonMessageConverter converter() {
+        return new Jackson2JsonMessageConverter();
+    }
+
+    @RabbitListener(queues = "order-warehouse")
+    public void orderQueueConsumer(OrderDto orderDto) {
+        OrderStatus orderStatus = orderDto.getOrderStatus();
+        System.out.println(String.format("Order {%d} status changed to {%s}", orderDto.getId(), orderStatus));
+        if (orderStatus == OrderStatus.PAID) {
+            orderDto.getItems().forEach(orderItemDto -> {
+                this.updateItemAmount(orderItemDto.getItemId(), new ItemAmountDto("available", -orderItemDto.getAmount()));
+            });
+        } else if (orderStatus == OrderStatus.CANCELLED) {
+            orderDto.getItems().forEach(orderItemDto -> {
+                this.updateItemAmount(orderItemDto.getItemId(), new ItemAmountDto("available", orderItemDto.getAmount()));
+            });
+        } else if (orderStatus == OrderStatus.COMPLETED) {
+            orderDto.getItems().forEach(orderItemDto -> {
+                this.updateItemAmount(orderItemDto.getItemId(), new ItemAmountDto("actual", -orderItemDto.getAmount()));
+            });
+        }
     }
 }

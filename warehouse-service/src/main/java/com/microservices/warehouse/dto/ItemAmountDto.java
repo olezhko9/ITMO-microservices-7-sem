@@ -19,4 +19,9 @@ public class ItemAmountDto {
     public void setAmount(int amount) {
         this.amount = amount;
     }
+
+    public ItemAmountDto(String amountType, int amount) {
+        this.amountType = amountType;
+        this.amount = amount;
+    }
 }
