@@ -1,5 +1,6 @@
 package com.microservices.ordersservice.service.rabbitmq;
 
+import com.microservices.ordersservice.model.OrderDto;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +15,8 @@ public class RabbitMQPublisher {
     @Value("${order.rabbitmq.exchange}")
     private String exchange;
 
-    public void publish(String routingKey, Object message) {
-        rabbitTemplate.convertAndSend(exchange, routingKey, message);
-        System.out.println("Send msg = " + message);
+    public void publish(String routingKey, OrderDto orderDto) {
+        rabbitTemplate.convertAndSend(exchange, routingKey, orderDto);
+        System.out.println("Send msg = " + orderDto);
     }
 }

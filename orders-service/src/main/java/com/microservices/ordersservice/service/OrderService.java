@@ -48,13 +48,17 @@ public class OrderService {
     }
 
     public ArrayList<OrderDto> getOrders() {
-        final ArrayList<OrderDto> orders = orderDao.getOrders();
-        rabbitMQPublisher.publish("orders.all", orders);
-        return orders;
+        return orderDao.getOrders();
     }
 
     public OrderDto setOrderStatus(int id, String status) throws ItemNotFoundException, DataIntegrityViolationException {
-        return orderDao.setOrderStatus(getOrderByID(id), status);
+        OrderDto orderDto = orderDao.setOrderStatus(getOrderByID(id), status);
+
+        if (status.equals("COMPLETED") || status.equals("CANCELLED") || status.equals("PAID")) {
+            rabbitMQPublisher.publish("orders." + status.toLowerCase(), orderDto);
+        }
+
+        return orderDto;
     }
 
     public OrderDto addItems(int id, OrderItemDto item) throws ItemNotFoundException, DataIntegrityViolationException {
