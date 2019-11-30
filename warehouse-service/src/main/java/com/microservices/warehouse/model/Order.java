@@ -20,16 +20,12 @@ public class Order {
         return Double.parseDouble(totalCost);
     }
 
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    private final Integer id;
-    private final Integer totalAmount;
-
+    private Integer id;
+    private Integer totalAmount;
     private OrderStatus orderStatus;
+    public String totalCost;
 
-    public final String totalCost;
+    public Order() {}
 
     public Order(Integer id,
                  Integer totalAmount,
@@ -39,13 +35,5 @@ public class Order {
         this.totalAmount = totalAmount;
         this.totalCost = totalCost;
         this.orderStatus = OrderStatus.values()[orderStatus];
-    }
-
-    public Order(@JsonProperty("totalAmount") Integer totalAmount,
-                 @JsonProperty("totalCost") String totalCost) {
-        this.id = null;
-        this.totalAmount = totalAmount;
-        this.totalCost = totalCost;
-        this.orderStatus = OrderStatus.COLLECTING;
     }
 }

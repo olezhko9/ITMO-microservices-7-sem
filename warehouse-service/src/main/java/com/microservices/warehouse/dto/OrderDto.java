@@ -10,7 +10,11 @@ public class OrderDto extends Order {
         return items;
     }
 
-    private final ArrayList<OrderItemDto> items;
+    private ArrayList<OrderItemDto> items;
+
+    public OrderDto() {
+        super();
+    }
 
     public OrderDto(Order order, ArrayList<OrderItemDto> items){
         super(order.getId(), order.getTotalAmount(), order.getOrderStatus().ordinal(), String.valueOf(order.totalCost));
