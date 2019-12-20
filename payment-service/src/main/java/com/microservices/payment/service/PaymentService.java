@@ -24,6 +24,7 @@ public class PaymentService {
     }
 
     public PaymentDto initPayment(int orderId, UserDetailsDto userDetails) {
+        this.changeOrderStatus(orderId, userDetails);
         return paymentDao.initPayment(orderId, userDetails);
     }
 
