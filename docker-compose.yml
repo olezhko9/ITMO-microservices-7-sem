@@ -6,3 +6,15 @@ services:
       - ./payment-service:/data
     ports:
       - "9002:9002"
+  orders:
+    build: ./orders-service
+    volumes:
+      - ./orders-service:/data
+    ports:
+      - "9000:9000"
+  warehouse:
+    build: ./warehouse-service
+    volumes:
+      - ./warehouse-service:/data
+    ports:
+      - "9001:9001"

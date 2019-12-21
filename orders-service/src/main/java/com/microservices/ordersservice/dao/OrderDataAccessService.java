@@ -84,7 +84,7 @@ public class OrderDataAccessService implements OrderDao {
     private void executeQueryUpdate(String query) throws DataIntegrityViolationException {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:Orders.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:data/Orders.db");
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
         }
@@ -100,7 +100,7 @@ public class OrderDataAccessService implements OrderDao {
         Connection connection = null;
         ResultSet rs = null;
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:Orders.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:data/Orders.db");
             Statement statement = connection.createStatement();
             rs = statement.executeQuery(query);
             ArrayList<OrderDto> output = parseOrderSelect(rs);
@@ -122,7 +122,7 @@ public class OrderDataAccessService implements OrderDao {
         Connection connection = null;
         ResultSet rs = null;
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:Orders.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:data/Orders.db");
             Statement statement = connection.createStatement();
             rs = statement.executeQuery(MessageFormat.format("SELECT ItemID, OrderItemAmount FROM OrdersItems WHERE OrderID={0,number,#};", id));
             ArrayList<OrderItemDto> output = new ArrayList<>();
