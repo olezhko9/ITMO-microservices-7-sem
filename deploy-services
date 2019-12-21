@@ -12,5 +12,8 @@ cd ..
 cd eureka-server
 ./gradlew build
 cd ..
+cd api-gateway
+./gradlew bootJar
+cd ..
 
 docker-compose up --force-recreate

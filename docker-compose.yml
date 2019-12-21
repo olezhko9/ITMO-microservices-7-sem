@@ -29,7 +29,7 @@ services:
     depends_on:
       - orders
   rabbitmq:
-    image: "rabbitmq:3.7.23-alpine"
+    image: "rabbitmq:3.7.23-management"
     ports:
       - 5672:5672
       - 15672:15672
@@ -41,3 +41,7 @@ services:
       interval: 5s
       timeout: 15s
       retries: 1
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8111:8111"
