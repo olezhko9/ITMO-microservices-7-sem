@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd payment-service
+./gradlew bootJar
+cd ..
+cd orders-service
+./gradlew bootJar
+cd ..
+cd warehouse-service
+./gradlew bootJar
+cd ..
+
+docker-compose build --no-cache
+docker-compose up

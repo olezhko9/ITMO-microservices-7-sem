@@ -43,7 +43,7 @@ public class PaymentService {
         if (!orderStatus.equals("")) {
             URL url = null;
             try {
-                url = new URL(String.format("http://localhost:9000/orders/%d/status/%s", orderId, orderStatus));
+                url = new URL(String.format("http://orders:9000/orders/%d/status/%s", orderId, orderStatus));
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("PUT");
                 con.setDoOutput(true);
