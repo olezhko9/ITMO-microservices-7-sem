@@ -1,0 +1,8 @@
+version: '3.4'
+services:
+  payment:
+    build: ./payment-service
+    volumes:
+      - ./payment-service:/data
+    ports:
+      - "9002:9002"
