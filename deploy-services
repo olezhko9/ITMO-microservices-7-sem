@@ -1,0 +1,19 @@
+#!/bin/bash
+
+cd payment-service
+./gradlew bootJar
+cd ..
+cd orders-service
+./gradlew bootJar
+cd ..
+cd warehouse-service
+./gradlew bootJar
+cd ..
+cd eureka-server
+./gradlew build
+cd ..
+cd api-gateway
+./gradlew bootJar
+cd ..
+
+docker-compose up --force-recreate

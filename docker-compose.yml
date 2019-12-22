@@ -1,0 +1,47 @@
+version: '3.4'
+services:
+  eureka:
+    build: ./eureka-server
+    ports:
+      - "8761:8761"
+  payment:
+    build: ./payment-service
+    volumes:
+      - ./payment-service:/data
+    ports:
+      - "9002:9002"
+  orders:
+    build: ./orders-service
+    volumes:
+      - ./orders-service:/data
+    ports:
+      - "9000:9000"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+  warehouse:
+    build: ./warehouse-service
+    volumes:
+      - ./warehouse-service:/data
+    ports:
+      - "9001:9001"
+    restart: on-failure
+    depends_on:
+      - orders
+  rabbitmq:
+    image: "rabbitmq:3.7.23-management"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8111:8111"
