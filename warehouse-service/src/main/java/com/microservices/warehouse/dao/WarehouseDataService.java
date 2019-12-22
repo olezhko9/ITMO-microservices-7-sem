@@ -14,7 +14,7 @@ import java.util.List;
 @Repository("sqlite")
 public class WarehouseDataService implements ItemDao {
 
-    private static final String CONNECTION_STRING = "jdbc:sqlite:data/warehouse.db";
+    private static final String CONNECTION_STRING = "jdbc:sqlite:warehouse.db";
     private Connection connection;
 
     public WarehouseDataService() {
