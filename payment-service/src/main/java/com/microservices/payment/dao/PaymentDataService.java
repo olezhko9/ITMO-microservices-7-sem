@@ -10,7 +10,7 @@ import java.sql.*;
 @Repository("sqlite")
 public class PaymentDataService implements PaymentDao {
 
-    private static final String CONNECTION_STRING = "jdbc:sqlite:data/Payments.db";
+    private static final String CONNECTION_STRING = "jdbc:sqlite:Payments.db";
     private Connection connection;
 
     public PaymentDataService() {
