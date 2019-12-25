@@ -33,7 +33,6 @@ public class ApiGatewayService {
             items.add(new AggregatedOrderItemDro(itemDto, orderItemDto));
         }
 
-        AggregatedOrderDto aggregatedOrderDto = new AggregatedOrderDto(orderDto, items);
-        return aggregatedOrderDto;
+        return new AggregatedOrderDto(orderDto, items);
     }
 }
