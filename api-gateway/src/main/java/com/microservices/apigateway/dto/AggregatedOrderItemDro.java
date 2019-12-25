@@ -2,27 +2,45 @@ package com.microservices.apigateway.dto;
 
 public class AggregatedOrderItemDro {
 
-    private ItemDto itemDto;
-    private OrderItemDto orderItemDto;
+    private int id;
+    private String name;
+    private float price;
+    private int actualAmount;
+    private int availableAmount;
+    private int orderAmount;
+
+    public AggregatedOrderItemDro() {}
 
     public AggregatedOrderItemDro(ItemDto itemDto, OrderItemDto orderItemDto) {
-        this.itemDto = itemDto;
-        this.orderItemDto = orderItemDto;
+        this.id = itemDto.getId();
+        this.name = itemDto.getName();
+        this.price = itemDto.getPrice();
+        this.actualAmount = itemDto.getActualAmount();
+        this.availableAmount = itemDto.getAvailableAmount();
+        this.orderAmount = orderItemDto.getAmount();
     }
 
-    public ItemDto getItemDto() {
-        return itemDto;
+    public int getId() {
+        return id;
     }
 
-    public void setItemDto(ItemDto itemDto) {
-        this.itemDto = itemDto;
+    public String getName() {
+        return name;
     }
 
-    public OrderItemDto getOrderItemDto() {
-        return orderItemDto;
+    public float getPrice() {
+        return price;
     }
 
-    public void setOrderItemDto(OrderItemDto orderItemDto) {
-        this.orderItemDto = orderItemDto;
+    public int getActualAmount() {
+        return actualAmount;
+    }
+
+    public int getAvailableAmount() {
+        return availableAmount;
+    }
+
+    public int getOrderAmount() {
+        return orderAmount;
     }
 }

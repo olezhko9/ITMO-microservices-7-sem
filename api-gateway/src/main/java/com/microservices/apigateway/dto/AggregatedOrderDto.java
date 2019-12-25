@@ -4,29 +4,40 @@ import java.util.List;
 
 public class AggregatedOrderDto {
 
-    private OrderDto order;
+    private Integer id;
+    private Integer totalAmount;
+    private OrderStatus orderStatus;
+    private String totalCost;
+
     private List<AggregatedOrderItemDro> items;
-
-    public OrderDto getOrder() {
-        return order;
-    }
-
-    public void setOrder(OrderDto order) {
-        this.order = order;
-    }
-
-    public List<AggregatedOrderItemDro> getItems() {
-        return items;
-    }
-
-    public void setItems(List<AggregatedOrderItemDro> items) {
-        this.items = items;
-    }
 
     public AggregatedOrderDto() {}
 
     public AggregatedOrderDto(OrderDto order, List<AggregatedOrderItemDro> items) {
-        this.order = order;
+        this.id = order.getId();
+        this.totalAmount = order.getTotalAmount();
+        this.orderStatus = order.getOrderStatus();
+        this.totalCost = order.getTotalCost();
         this.items = items;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getTotalAmount() {
+        return totalAmount;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public String getTotalCost() {
+        return totalCost;
+    }
+
+    public List<AggregatedOrderItemDro> getItems() {
+        return items;
     }
 }
