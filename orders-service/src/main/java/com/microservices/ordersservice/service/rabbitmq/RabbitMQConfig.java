@@ -1,5 +1,6 @@
 package com.microservices.ordersservice.service.rabbitmq;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -17,19 +18,36 @@ public class RabbitMQConfig {
     @Value("${order.rabbitmq.routingkey}")
     private String routingkey;
 
+    @Value("${spring.rabbitmq.host}")
+    private String rabbitHost;
+
+    @Value("${spring.rabbitmq.username}")
+    private String rabbitUsername;
+
+    @Value("${spring.rabbitmq.password}")
+    private String rabbitPassword;
+
     @Bean
-    Queue warehouseServiceQueue() {
-        return new Queue("order-warehouse", true);
+    public ConnectionFactory connectionFactory() {
+        CachingConnectionFactory factory = new CachingConnectionFactory(rabbitHost);
+        factory.setUsername(rabbitUsername);
+        factory.setPassword(rabbitPassword);
+        return factory;
     }
 
     @Bean
-    TopicExchange exchange() {
+    public TopicExchange directExchange() {
         return new TopicExchange(exchange);
     }
 
     @Bean
-    Binding binding(TopicExchange exchange) {
-        return BindingBuilder.bind(warehouseServiceQueue()).to(exchange).with(routingkey);
+    public Queue warehouseServiceQueue() {
+        return new Queue("order-warehouse", true);
+    }
+
+    @Bean
+    public Binding binding(TopicExchange topicExchange) {
+        return BindingBuilder.bind(warehouseServiceQueue()).to(topicExchange).with(routingkey);
     }
 
     @Bean
@@ -38,10 +56,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public AmqpTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-        final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+    public RabbitTemplate rabbitTemplate() {
+        ConnectionFactory connectionFactory = connectionFactory();
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(jsonMessageConverter());
-        rabbitTemplate.setExchange(this.exchange);
+
         return rabbitTemplate;
     }
 }
