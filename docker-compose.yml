@@ -4,30 +4,38 @@ services:
     build: ./eureka-server
     ports:
       - "8761:8761"
+    restart: on-failure
   payment:
     build: ./payment-service
     volumes:
-      - ./payment-service:/data
+      - ./payment-service/data:/data
     ports:
       - "9002:9002"
+    depends_on:
+      - rabbitmq
+      - eureka
+    restart: on-failure
   orders:
     build: ./orders-service
     volumes:
-      - ./orders-service:/data
+      - ./orders-service/data:/data
     ports:
       - "9000:9000"
     restart: on-failure
     depends_on:
       - rabbitmq
+      - eureka
   warehouse:
     build: ./warehouse-service
     volumes:
-      - ./warehouse-service:/data
+      - ./warehouse-service/data:/data
     ports:
       - "9001:9001"
     restart: on-failure
     depends_on:
       - orders
+      - rabbitmq
+      - eureka
   rabbitmq:
     image: 'bitnami/rabbitmq:3.8'
     ports:
@@ -35,7 +43,14 @@ services:
       - '5672:5672'
       - '25672:25672'
       - '15672:15672'
+    volumes:
+      - ./rabbitmq-isolated.conf:/opt/bitnami/rabbitmq/etc/rabbitmq/rabbitmq.config:ro
+#      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
   api-gateway:
     build: ./api-gateway
     ports:
       - "8111:8111"
+    depends_on:
+      - rabbitmq
+      - eureka
+    restart: on-failure
