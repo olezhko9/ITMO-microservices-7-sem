@@ -1,10 +1,12 @@
 version: '3.4'
 services:
+  
   eureka:
     build: ./eureka-server
     ports:
       - "8761:8761"
     restart: on-failure
+
   payment:
     build: ./payment-service
     volumes:
@@ -15,6 +17,7 @@ services:
       - rabbitmq
       - eureka
     restart: on-failure
+
   orders:
     build: ./orders-service
     volumes:
@@ -22,9 +25,14 @@ services:
     ports:
       - "9000:9000"
     restart: on-failure
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=bitnami
     depends_on:
       - rabbitmq
       - eureka
+
   warehouse:
     build: ./warehouse-service
     volumes:
@@ -32,20 +40,25 @@ services:
     ports:
       - "9001:9001"
     restart: on-failure
+
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_USERNAME=user
+      - SPRING_RABBITMQ_PASSWORD=bitnami
     depends_on:
       - orders
       - rabbitmq
       - eureka
+
   rabbitmq:
     image: 'bitnami/rabbitmq:3.8'
+    build: ./rabbitmq
     ports:
       - '4368:4369'
       - '5672:5672'
       - '25672:25672'
       - '15672:15672'
-    volumes:
-      - ./rabbitmq-isolated.conf:/opt/bitnami/rabbitmq/etc/rabbitmq/rabbitmq.config:ro
-#      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
+
   api-gateway:
     build: ./api-gateway
     ports:
